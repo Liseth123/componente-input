@@ -1,0 +1,58 @@
+<link rel="import" href="../polymer/polymer-element.html">
+
+<dom-module id="ids-input">
+  <template>
+    <style>
+      :host {
+        display: block;
+      }
+      label{
+    font-family: "Latin Modern Roman 10";
+       font-style: oblique;
+      }
+    </style>
+    <label>Nombre</label>
+    <input type="text" on-change="handlerChange" >
+    <label><slot></slot></label>
+  </template>
+
+  <script>
+
+    class IdsInput extends Polymer.Element {
+      static get is() { return 'ids-input'; }
+      static get properties() {
+        return {
+          nombre: {
+            type: String,
+            value: 'Liseth',
+          }
+        };
+      }
+      constructor(){
+        super();
+        this.addEventListener('input', this.actionEvent.bind(this));
+      }
+
+      handlerChange(e) {
+        console.log(e);
+        // this
+        // Crear y disparar Custom event, y enviar en detail, el nombre del campo y el valor
+      }
+
+      actionEvent(e){
+        const target = e.path[0];
+        let input= this.dispatchEvent(new CustomEvent ('input-data',{
+          detail: { name: target.name, value: target.value }, bubbles: true , composed: true
+      }));
+      }
+
+
+      ready () {
+        super.ready();//carga todos los elementos de shadow
+        this.shadowRoot.querySelector('input').addEventListener('change', this.handlerChange.bind(this))
+      }
+    }
+
+    window.customElements.define(IdsInput.is, IdsInput);
+  </script>
+</dom-module>
